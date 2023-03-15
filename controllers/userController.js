@@ -27,7 +27,9 @@ async function addNewPost(req, res, next) {
 }
 
 async function getPosts(req, res, next) {
-  const post = await Post.findAll();
+  const post = await Post.findAll({
+    include: User,
+  });
   res.send(post);
 }
 
