@@ -8,6 +8,6 @@ app.use(express.json());
 
 app.use("/", userRoute);
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   app.listen(3000, () => console.log("server run at port 3000"));
 });
