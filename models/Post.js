@@ -1,10 +1,9 @@
-const { User } = require("./");
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
     "Post",
     {
       title: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
       },
     },
     {

@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       name: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
+        unique: true,
       },
       password: {
         type: DataTypes.TEXT,

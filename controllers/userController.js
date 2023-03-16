@@ -1,15 +1,17 @@
 const { User, Post } = require("../models");
-Post.hasOne(User);
-User.belongsTo(Post);
+
+// 002
+User.hasMany(Post);
+Post.belongsTo(User);
 
 async function addNewUser(req, res, next) {
-  User.create({
-    name: "Assami Muzaki",
-    password: "qwe",
-  }).catch((err) => {
-    console.log(err);
+  const { name, password } = req.body;
+  const newUser = await User.create({
+    name: name,
+    password: password,
   });
-  res.send("insert new user");
+
+  res.send(newUser);
 }
 
 async function addNewPost(req, res, next) {
@@ -22,10 +24,16 @@ async function addNewPost(req, res, next) {
   const post = await Post.create({
     title: title,
   });
-  post.setUser(user);
+  user.addPost(post);
   res.send(post);
 }
 
+async function getUsers(req, res, next) {
+  const post = await User.findAll({
+    include: Post,
+  });
+  res.send(post);
+}
 async function getPosts(req, res, next) {
   const post = await Post.findAll({
     include: User,
@@ -37,4 +45,5 @@ module.exports = {
   addNewUser,
   addNewPost,
   getPosts,
+  getUsers,
 };
