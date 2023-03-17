@@ -1,8 +1,15 @@
-const { User, Post } = require("../models");
+const { User, Post, FollowerFollowing } = require("../models");
 
-// 002
-User.hasMany(Post);
-Post.belongsTo(User);
+User.belongsToMany(User, {
+  as: "follower",
+  foreignKey: "followerId",
+  through: FollowerFollowing,
+});
+User.belongsToMany(User, {
+  as: "following",
+  foreignKey: "followingId",
+  through: FollowerFollowing,
+});
 
 async function addNewUser(req, res, next) {
   const { name, password } = req.body;
@@ -28,16 +35,30 @@ async function addNewPost(req, res, next) {
   res.send(post);
 }
 
+async function addUser(req, res, next) {
+  const post1 = await User.findOne({
+    where: {
+      name: "Kodin",
+    },
+  });
+  const post2 = await User.findOne({
+    where: {
+      name: "Budi",
+    },
+  });
+  post1.addFollower(post2);
+  post2.addFollowing(post1);
+  res.send(post1);
+}
+
 async function getUsers(req, res, next) {
   const post = await User.findAll({
-    include: Post,
+    include: { all: true },
   });
   res.send(post);
 }
 async function getPosts(req, res, next) {
-  const post = await Post.findAll({
-    include: User,
-  });
+  const post = await Post.findAll();
   res.send(post);
 }
 
@@ -46,4 +67,5 @@ module.exports = {
   addNewPost,
   getPosts,
   getUsers,
+  addUser,
 };
